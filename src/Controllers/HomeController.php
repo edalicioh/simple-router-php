@@ -3,32 +3,36 @@
 namespace Edalicio\DependencyInjection\Controllers;
 
 use Edalicio\DependencyInjection\Core\Attribute\Controller;
+use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Delete;
+use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Get;
+use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Post;
+use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Put;
 use Edalicio\DependencyInjection\Core\Attribute\Route;
 use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
 
-#[Controller('HomeController')]
+#[Controller('HomeController','/home')]
 class HomeController {
-    #[Route('/', HttpMethodsEnum::Get)]
+    #[Get('/')]
     public function index( ) {
       echo 'index';
     }
-    public function show($id ) {
+    public function show(int $id ) {
         dd($id);
     }
-    #[Route('/', 'POST')]
+    #[Post('/')]
     public function store() {
         dd("sda");
     }
 
-    #[Route('/:id/edit', 'POST')]
+    #[Get('/:id/edit')]
     public function edit(int $id) {
         dd($id);
     }
-    #[Route('/', 'PUT')]
+    #[Put('/')]
     public function update( ) {
         dd(__METHOD__);
     }
-    #[Route('/', 'DELETE')]
+    #[Delete('/')]
     public function delete( ) {
         dd(__METHOD__);
     }

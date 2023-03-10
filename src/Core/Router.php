@@ -8,11 +8,13 @@ use Edalicio\DependencyInjection\Core\Attribute\Route;
 use Edalicio\DependencyInjection\Core\Attribute\Middleware;
 use Edalicio\DependencyInjection\Core\Attribute\Controller;
 use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
+use Edalicio\DependencyInjection\Core\Interfaces\IRouter;
 
 class Router
 {
 
   private ?string $routerName = null;
+  private ?string $prefix = null;
 
   public function __construct(
     private string $requestMethod,
@@ -62,6 +64,10 @@ class Router
       $actionParameters = (new \ReflectionFunction($action))->getParameters();
     }
 
+    if( $this->prefix ){
+      $url = $this->prefix.$url;
+      $this->prefix = null;
+    }
 
     $this->addRoute(
       url: $url,
@@ -82,6 +88,7 @@ class Router
       list('uri' => $uri_pattern, 'method' => $method, 'controller' => $controller, 'action' => $action) = $route;
 
       $uri_regex = preg_replace('/:[a-zA-Z0-9_-]+/', '([a-zA-Z0-9_-]+)', $uri_pattern);
+      
       // verifique se a URI atual corresponde à rota
       if ($this->requestMethod == $method && preg_match("#^$uri_regex$#", $this->requestUri, $matches)) {
 
@@ -165,17 +172,18 @@ class Router
       $prefix = $this->setPrefix($controllerArguments);
 
       foreach ($reflection->getMethods() as $method) {
-        $methodAttributes = $method->getAttributes(Route::class);
-
+        $methodAttributes = $method->getAttributes(Route::class,2);
+        
         $middlewares = [...$this->setMiddleware($reflection), ...$this->setMiddleware($method)];
 
         foreach ($methodAttributes as $attribute) {
 
-          $arguments = $attribute->getArguments();
-          $uri = $this->setUriPath(arguments: $arguments, prefix: $prefix);
-          $http_method = $this->setHttpMethod(arguments: $arguments);
+          $arguments = $attribute->newInstance();
+          $uri = $prefix . $arguments->uri;
+          $http_method = $arguments->method;
           $action = $method->getName();
           $actionParameters = $method->getParameters();
+
           $this->addRoute(
           url: $uri,
           method: $http_method,
@@ -209,7 +217,6 @@ class Router
   {
     $this->setRoute($controllers);
     $route = $this->findRoute();
-
     if ($route) {
       [
         'controller' => $controller_name,
@@ -238,5 +245,11 @@ class Router
       http_response_code(404);
       echo "Página não encontrada";
     }
+  }
+
+  public function prefix(string $path):self
+  {
+      $this->prefix = $path;
+      return $this;
   }
 }

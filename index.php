@@ -36,7 +36,7 @@ $requestUri =  parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $router = new Router(requestMethod: $requestMethod, requestUri: $requestUri );
 
 
-$router->register(HttpMethodsEnum::Get, '/:id', [ HomeController::class, 'show' ], [AuthMiddleware::class]);
+$router->prefix('/home')->register(HttpMethodsEnum::Get, '/:id', [ HomeController::class, 'show' ], [AuthMiddleware::class]);
 
 
 $router->run($controllers);

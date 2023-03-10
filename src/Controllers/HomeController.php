@@ -12,12 +12,9 @@ use Edalicio\DependencyInjection\Middlewares\UserMiddleware;
 
 #[Controller('HomeController')]
 class HomeController {
-    #[Route('/', HttpMethodsEnum::Get)]    
-    #[Middleware([AuthMiddleware::class])]
     public function index( ) {
       echo 'index';
     }
-    #[Route('/:id', 'GET')]
     public function show($id ) {
         dd($id);
     }

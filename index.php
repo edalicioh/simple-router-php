@@ -4,8 +4,10 @@ require_once __DIR__ ."/vendor/autoload.php";
 
 use Edalicio\DependencyInjection\Controllers\HomeController;
 use Edalicio\DependencyInjection\Controllers\UserController;
+use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
 use Edalicio\DependencyInjection\Core\Request;
 use Edalicio\DependencyInjection\Core\Router;
+use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -28,7 +30,15 @@ $requestMethod =  $_SERVER['REQUEST_METHOD'];
 $requestUri =  parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 
-(new Router(requestMethod: $requestMethod, requestUri: $requestUri ))->run($controllers);
+$router = new Router(requestMethod: $requestMethod, requestUri: $requestUri );
+
+
+$router->register(HttpMethodsEnum::Get, '/:id', function ($id) {
+    echo "Closure " . $id;
+}, [AuthMiddleware::class]);
+
+
+$router->run($controllers);
 
 
 

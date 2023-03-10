@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Edalicio\DependencyInjection\Core;
 
@@ -12,6 +12,8 @@ use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
 class Router
 {
 
+  private ?string $routerName = null;
+
   public function __construct(
     private string $requestMethod,
     private string $requestUri,
@@ -22,14 +24,16 @@ class Router
   {
   }
 
-  private function addRoute(string $url, string|HttpMethodsEnum $method, string $controller, string $action, array $actionParameters,array $middlewares)
+  private function addRoute(string $url, string|HttpMethodsEnum $method, ?string $controller, string|callable $action, array $actionParameters, array $middlewares)
   {
-    
-    if(!is_string($method)){
+
+    if (!is_string($method)) {
       $method = $method->value;
     }
 
-    $this->routes[$controller . "::" . $action] = [
+    $this->setRouteName($url, $method);
+
+    $this->routes[$this->routerName] = [
       'uri' => $url,
       'method' => $method,
       'controller' => $controller,
@@ -37,12 +41,39 @@ class Router
       'actionParameters' => $actionParameters,
       'middlewares' => $middlewares,
     ];
-    
+
   }
 
-  
+  public function setRouteName( string $url, string $method ): void
+  {
+      $this->routerName = $url . "::" . $method;
+  }
+
+  public function register(string|HttpMethodsEnum $method, string $url, callable|array $action, array $middlewares = []) : self
+  {
+
+    if( is_array($action)){
+      [$controller, $action] = $action;
+    }
+
+    if(is_callable($action)){
+      $controller = '';
+      $actionParameters = (new \ReflectionFunction($action))->getParameters();
+    }
 
 
+    $this->addRoute(
+      url: $url,
+      method: $method,
+      controller: $controller,
+      action: $action,
+      actionParameters: $actionParameters ?? [],
+      middlewares: $middlewares
+    );
+
+    return $this;
+  }
+ 
 
   public function findRoute(): array|bool
   {
@@ -59,7 +90,8 @@ class Router
         for ($i = 1; $i < count($matches); $i++) {
           $params[$urikeys[1][$i - 1]] = $matches[$i];
         }
-        $route = $this->routes[$controller . "::" . $action];
+        $this->setRouteName($uri_pattern, $method);
+        $route = $this->routes[$this->routerName];
         $route['params'] = $params;
         return $route;
 
@@ -69,27 +101,25 @@ class Router
     return false;
   }
 
-  private function setMiddleware(\ReflectionMethod | \ReflectionClass $reflection)
+  private function setMiddleware(\ReflectionMethod|\ReflectionClass $reflection)
   {
     $middlewares = [];
     $middlewareAttributes = $reflection->getAttributes(Middleware::class);
     foreach ($middlewareAttributes as $attribute) {
       $arguments = $attribute->getArguments()[0];
-      if(is_array($arguments )) {
-        foreach($arguments as $argument) {
-          $middleware = $argument;
-          $middlewares[] = new $middleware();
+      if (is_array($arguments)) {
+        foreach ($arguments as $argument) {
+          $middlewares[] =$argument;
         }
       }
-      if(is_string($arguments)){
-        $middleware = $arguments;
-        $middlewares[] = new $middleware();
+      if (is_string($arguments)) {
+        $middlewares[] = $arguments;
       }
 
-      
+
     }
 
-    
+
     return $middlewares;
   }
 
@@ -126,17 +156,17 @@ class Router
   {
 
     foreach ($controllers as $controller) {
-      
+
       $reflection = new \ReflectionClass($controller);
       $controllerAttributes = $reflection->getAttributes(Controller::class);
-      $controllerArguments = $controllerAttributes[0]->getArguments();     
+      $controllerArguments = $controllerAttributes[0]->getArguments();
 
       $prefix = $this->setPrefix($controllerArguments);
 
       foreach ($reflection->getMethods() as $method) {
         $methodAttributes = $method->getAttributes(Route::class);
 
-        $middlewares = [...$this->setMiddleware($reflection),  ...$this->setMiddleware($method)];  
+        $middlewares = [...$this->setMiddleware($reflection), ...$this->setMiddleware($method)];
 
         foreach ($methodAttributes as $attribute) {
 
@@ -147,12 +177,12 @@ class Router
           $actionParameters = $method->getParameters();
 
           $this->addRoute(
-            url: $uri,
-            method: $http_method,
-            controller: $controller,
-            action: $action,
-            actionParameters: $actionParameters,
-            middlewares: $middlewares
+          url: $uri,
+          method: $http_method,
+          controller: $controller,
+          action: $action,
+          actionParameters: $actionParameters,
+          middlewares: $middlewares
           );
         }
       }
@@ -162,7 +192,7 @@ class Router
   private function setArgs(array $actionParameters, array $params): array
   {
     $request = $this->request;
-    return array_map(function (\ReflectionParameter $a) use ($request, $params) {      
+    return array_map(function (\ReflectionParameter $a) use ($request, $params) {
 
       if (class_exists($request ?? '') && $a->getType() && get_class($request) == $a->getType()->getName()) {
         return $request;
@@ -183,7 +213,7 @@ class Router
     if ($route) {
       [
         'controller' => $controller_name,
-        'action' => $action_name,
+        'action' => $action,
         'actionParameters' => $actionParameters,
         'params' => $params,
         'middlewares' => $middlewares,
@@ -191,14 +221,19 @@ class Router
       ] = $route;
 
       foreach ($middlewares as $middleware) {
-          $middleware->handle();
+
+        (new $middleware)->handle();
       }
 
       $args = $this->setArgs(actionParameters: $actionParameters, params: $params);
 
+      if(is_callable($action)) {
+        return call_user_func_array($action, $args);
+      }
+
       $controller = new $controller_name();
 
-      return call_user_func_array([$controller, $action_name], $args);
+      return call_user_func_array([$controller, $action], $args);
 
     } else {
       http_response_code(404);

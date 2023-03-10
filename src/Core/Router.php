@@ -54,6 +54,7 @@ class Router
 
     if( is_array($action)){
       [$controller, $action] = $action;
+      $actionParameters = (new \ReflectionMethod( $controller , $action))->getParameters();
     }
 
     if(is_callable($action)){
@@ -175,7 +176,6 @@ class Router
           $http_method = $this->setHttpMethod(arguments: $arguments);
           $action = $method->getName();
           $actionParameters = $method->getParameters();
-
           $this->addRoute(
           url: $uri,
           method: $http_method,
@@ -221,7 +221,6 @@ class Router
       ] = $route;
 
       foreach ($middlewares as $middleware) {
-
         (new $middleware)->handle();
       }
 

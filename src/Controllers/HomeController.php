@@ -3,15 +3,12 @@
 namespace Edalicio\DependencyInjection\Controllers;
 
 use Edalicio\DependencyInjection\Core\Attribute\Controller;
-use Edalicio\DependencyInjection\Core\Attribute\Middleware;
 use Edalicio\DependencyInjection\Core\Attribute\Route;
 use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
-use Edalicio\DependencyInjection\Core\Request;
-use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
-use Edalicio\DependencyInjection\Middlewares\UserMiddleware;
 
 #[Controller('HomeController')]
 class HomeController {
+    #[Route('/', HttpMethodsEnum::Get)]
     public function index( ) {
       echo 'index';
     }

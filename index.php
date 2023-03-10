@@ -15,7 +15,10 @@ error_reporting(E_ALL);
 
 function dd($v)
 {
+
     echo "<pre>";
+    echo '<b>' . debug_backtrace()[0]['file'] . '</b>:';
+    echo '<b>' . debug_backtrace()[0]['line'] . '</b>';
     die(var_dump($v));
 }
 
@@ -33,9 +36,7 @@ $requestUri =  parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $router = new Router(requestMethod: $requestMethod, requestUri: $requestUri );
 
 
-$router->register(HttpMethodsEnum::Get, '/:id', function ($id) {
-    echo "Closure " . $id;
-}, [AuthMiddleware::class]);
+$router->register(HttpMethodsEnum::Get, '/:id', [ HomeController::class, 'show' ], [AuthMiddleware::class]);
 
 
 $router->run($controllers);

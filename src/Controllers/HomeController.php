@@ -5,13 +5,14 @@ namespace Edalicio\DependencyInjection\Controllers;
 use Edalicio\DependencyInjection\Core\Attribute\Controller;
 use Edalicio\DependencyInjection\Core\Attribute\Middleware;
 use Edalicio\DependencyInjection\Core\Attribute\Route;
+use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
 use Edalicio\DependencyInjection\Core\Request;
 use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
 use Edalicio\DependencyInjection\Middlewares\UserMiddleware;
 
 #[Controller('HomeController')]
 class HomeController {
-    #[Route('/', 'GET')]    
+    #[Route('/', HttpMethodsEnum::Get)]    
     #[Middleware([AuthMiddleware::class])]
     public function index( ) {
       echo 'index';
@@ -21,12 +22,12 @@ class HomeController {
         dd($id);
     }
     #[Route('/', 'POST')]
-    public function store(Request $request ) {
-        dd($request->getParamAll());
+    public function store() {
+        dd("sda");
     }
 
     #[Route('/:id/edit', 'POST')]
-    public function edit(Request $request ,int $id) {
+    public function edit(int $id) {
         dd($id);
     }
     #[Route('/', 'PUT')]

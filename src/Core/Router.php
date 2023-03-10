@@ -7,6 +7,7 @@ namespace Edalicio\DependencyInjection\Core;
 use Edalicio\DependencyInjection\Core\Attribute\Route;
 use Edalicio\DependencyInjection\Core\Attribute\Middleware;
 use Edalicio\DependencyInjection\Core\Attribute\Controller;
+use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
 
 class Router
 {
@@ -21,8 +22,13 @@ class Router
   {
   }
 
-  private function addRoute(string $url, string $method, string $controller, string $action, array $actionParameters,array $middlewares)
+  private function addRoute(string $url, string|HttpMethodsEnum $method, string $controller, string $action, array $actionParameters,array $middlewares)
   {
+    
+    if(!is_string($method)){
+      $method = $method->value;
+    }
+
     $this->routes[$controller . "::" . $action] = [
       'uri' => $url,
       'method' => $method,
@@ -31,7 +37,10 @@ class Router
       'actionParameters' => $actionParameters,
       'middlewares' => $middlewares,
     ];
+    
   }
+
+  
 
 
 
@@ -155,7 +164,7 @@ class Router
     $request = $this->request;
     return array_map(function (\ReflectionParameter $a) use ($request, $params) {      
 
-      if ($a->getType() && get_class($request) == $a->getType()->getName()) {
+      if (class_exists($request ?? '') && $a->getType() && get_class($request) == $a->getType()->getName()) {
         return $request;
       }
 

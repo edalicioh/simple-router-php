@@ -1,14 +1,14 @@
 <?php 
 
-namespace Edalicio\DependencyInjection\Controllers;
+namespace Edalicio\SimpleRouter\Controllers;
 
-use Edalicio\DependencyInjection\Core\Attribute\Controller;
-use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Delete;
-use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Get;
-use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Post;
-use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Put;
-use Edalicio\DependencyInjection\Core\Attribute\Middleware;
-use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
+use Edalicio\SimpleRouter\Core\Attribute\Controller;
+use Edalicio\SimpleRouter\Core\Attribute\HttpMethods\Delete;
+use Edalicio\SimpleRouter\Core\Attribute\HttpMethods\Get;
+use Edalicio\SimpleRouter\Core\Attribute\HttpMethods\Post;
+use Edalicio\SimpleRouter\Core\Attribute\HttpMethods\Put;
+use Edalicio\SimpleRouter\Core\Attribute\Middleware;
+use Edalicio\SimpleRouter\Middlewares\AuthMiddleware;
 
 #[Controller('HomeController','/home')]
 #[Middleware(AuthMiddleware::class)]

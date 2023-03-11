@@ -1,6 +1,6 @@
 <?php 
 
-namespace Edalicio\DependencyInjection\Core\Interfaces;
+namespace Edalicio\SimpleRouter\Core\Interfaces;
 
 interface IRequest {
     public function getMethod():string ;

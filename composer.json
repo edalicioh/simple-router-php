@@ -2,7 +2,7 @@
     "name": "edalicio/dependency_injection",
     "autoload": {
         "psr-4": {
-            "Edalicio\\DependencyInjection\\": "src/"
+            "Edalicio\\SimpleRouter\\": "src/"
         }
     },
     "autoload-dev": {

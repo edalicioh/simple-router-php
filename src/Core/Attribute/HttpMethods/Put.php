@@ -1,10 +1,10 @@
 <?php
 
-namespace Edalicio\DependencyInjection\Core\Attribute\HttpMethods;
+namespace Edalicio\SimpleRouter\Core\Attribute\HttpMethods;
 
 use Attribute;
-use Edalicio\DependencyInjection\Core\Attribute\Route;
-use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
+use Edalicio\SimpleRouter\Core\Attribute\Route;
+use Edalicio\SimpleRouter\Core\Enums\HttpMethodsEnum;
 
 
 #[Attribute(Attribute::TARGET_METHOD)]

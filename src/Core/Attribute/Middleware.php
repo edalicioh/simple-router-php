@@ -1,6 +1,6 @@
 <?php 
 
-namespace Edalicio\DependencyInjection\Core\Attribute;
+namespace Edalicio\SimpleRouter\Core\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD)]

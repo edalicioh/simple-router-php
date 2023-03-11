@@ -1,8 +1,8 @@
 <?php
-use Edalicio\DependencyInjection\Core\Attribute\Controller;
-use Edalicio\DependencyInjection\Core\Attribute\Middleware;
-use Edalicio\DependencyInjection\Core\Attribute\Route;
-use Edalicio\DependencyInjection\Core\Router;
+use Edalicio\SimpleRouter\Core\Attribute\Controller;
+use Edalicio\SimpleRouter\Core\Attribute\Middleware;
+use Edalicio\SimpleRouter\Core\Attribute\Route;
+use Edalicio\SimpleRouter\Core\Router;
 
 
 class AuthMiddlewareMock {

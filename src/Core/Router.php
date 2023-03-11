@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Edalicio\DependencyInjection\Core;
+namespace Edalicio\SimpleRouter\Core;
 
-use Edalicio\DependencyInjection\Core\Attribute\Route;
-use Edalicio\DependencyInjection\Core\Attribute\Middleware;
-use Edalicio\DependencyInjection\Core\Attribute\Controller;
-use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
-use Edalicio\DependencyInjection\Core\Interfaces\IRouter;
+use Edalicio\SimpleRouter\Core\Attribute\Route;
+use Edalicio\SimpleRouter\Core\Attribute\Middleware;
+use Edalicio\SimpleRouter\Core\Attribute\Controller;
+use Edalicio\SimpleRouter\Core\Enums\HttpMethodsEnum;
+use Edalicio\SimpleRouter\Core\Interfaces\IRouter;
 
 class Router
 {

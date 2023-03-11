@@ -1,5 +1,5 @@
 <?php
-namespace Edalicio\DependencyInjection\Core\Attribute;
+namespace Edalicio\SimpleRouter\Core\Attribute;
 use Attribute;
 
 // definir um atributo de controlador que armazena o nome da classe do controlador

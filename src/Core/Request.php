@@ -1,8 +1,8 @@
 <?php
 
-namespace Edalicio\DependencyInjection\Core;
+namespace Edalicio\SimpleRouter\Core;
 
-use Edalicio\DependencyInjection\Core\Interfaces\IRequest;
+use Edalicio\SimpleRouter\Core\Interfaces\IRequest;
 
 class Request implements IRequest
 {

@@ -2,10 +2,10 @@
 
 require_once __DIR__ ."/vendor/autoload.php";
 
-use Edalicio\DependencyInjection\Controllers\HomeController;
-use Edalicio\DependencyInjection\Controllers\UserController;
-use Edalicio\DependencyInjection\Core\Request;
-use Edalicio\DependencyInjection\Core\Router;
+use Edalicio\SimpleRouter\Controllers\HomeController;
+use Edalicio\SimpleRouter\Controllers\UserController;
+use Edalicio\SimpleRouter\Core\Request;
+use Edalicio\SimpleRouter\Core\Router;
 
 session_start();
 

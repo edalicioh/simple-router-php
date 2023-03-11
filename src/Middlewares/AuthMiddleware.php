@@ -1,7 +1,7 @@
 <?php 
 
-namespace Edalicio\DependencyInjection\Middlewares;
-use Edalicio\DependencyInjection\Core\Interfaces\IMiddleware;
+namespace Edalicio\SimpleRouter\Middlewares;
+use Edalicio\SimpleRouter\Core\Interfaces\IMiddleware;
 
 
 class AuthMiddleware implements IMiddleware {

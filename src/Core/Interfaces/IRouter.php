@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace Edalicio\DependencyInjection\Core\Interfaces;
+namespace Edalicio\SimpleRouter\Core\Interfaces;
 
 interface IRouter
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Edalicio\DependencyInjection\Core\Enums;
+namespace Edalicio\SimpleRouter\Core\Enums;
 
 enum HttpMethodsEnum: string
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Edalicio\DependencyInjection\Core\Traits;
+namespace Edalicio\SimpleRouter\Core\Traits;
 
-use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
+use Edalicio\SimpleRouter\Core\Enums\HttpMethodsEnum;
 
 trait RouterTrait
 {

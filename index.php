@@ -4,11 +4,10 @@ require_once __DIR__ ."/vendor/autoload.php";
 
 use Edalicio\DependencyInjection\Controllers\HomeController;
 use Edalicio\DependencyInjection\Controllers\UserController;
-use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
-use Edalicio\DependencyInjection\Core\Interfaces\IRequest;
 use Edalicio\DependencyInjection\Core\Request;
 use Edalicio\DependencyInjection\Core\Router;
-use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
+
+session_start();
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -23,28 +22,20 @@ function dd($v)
     die(var_dump($v));
 }
 
-
+$_SESSION['user'] = 1;
 
 $controllers = [
     HomeController::class,
     UserController::class,
 ];
 
-$requestMethod =  $_SERVER['REQUEST_METHOD'];
-$requestUri =  parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$request =  new Request();
+
+$requestMethod =  $request->getMethod();
+$requestUri =  $request->getPath();
 
 
-$router = new Router(requestMethod: $requestMethod, requestUri: $requestUri , request: new Request());
-
-
-        $router->post('/', function(Request $request){
-            echo 'post';
-            dd($request->getParam('dsada'));
-        });
-    
-        $router->get('/', function(){
-            echo __METHOD__;
-        });
+$router = new Router(requestMethod: $requestMethod, requestUri: $requestUri , request: $request);
 
 
 $router->run($controllers);

@@ -7,30 +7,33 @@ use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Delete;
 use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Get;
 use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Post;
 use Edalicio\DependencyInjection\Core\Attribute\HttpMethods\Put;
-use Edalicio\DependencyInjection\Core\Attribute\Route;
-use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
+use Edalicio\DependencyInjection\Core\Attribute\Middleware;
+use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
 
 #[Controller('HomeController','/home')]
+#[Middleware(AuthMiddleware::class)]
 class HomeController {
     #[Get('/')]
-    public function index( ) {
+    public function index(array $get ) {
       echo 'index';
     }
+
     public function show(int $id ) {
         dd($id);
     }
+
     #[Post('/')]
-    public function store() {
-        dd("sda");
+    public function store(array $data) {
+        dd($data);
     }
 
     #[Get('/:id/edit')]
     public function edit(int $id) {
         dd($id);
     }
-    #[Put('/')]
-    public function update( ) {
-        dd(__METHOD__);
+    #[Put('/:id')]
+    public function update(int $id ,array $data) {
+        dd($id);
     }
     #[Delete('/')]
     public function delete( ) {

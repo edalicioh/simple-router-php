@@ -211,6 +211,25 @@ class Router
         return $request;
       }
 
+      if($a->getName() == 'post') {
+        $params['post'] = $_POST;
+      }
+
+      if($a->getName() == 'get') {
+        $params['get'] = $_GET;
+      }
+
+      if($a->getName() == 'json') {
+        $params['json'] =  (array) json_decode(file_get_contents('php://input'));
+      }
+
+      if($a->getName() == 'data') {
+        $array = (array) json_decode(file_get_contents('php://input'));        
+        $params['data'] =  array_merge($_GET, $_POST, $array);
+      }
+
+
+
       if (isset($params[$a->getName()])) {
         return $params[$a->getName()];
       }

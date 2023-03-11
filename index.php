@@ -5,6 +5,7 @@ require_once __DIR__ ."/vendor/autoload.php";
 use Edalicio\DependencyInjection\Controllers\HomeController;
 use Edalicio\DependencyInjection\Controllers\UserController;
 use Edalicio\DependencyInjection\Core\Enums\HttpMethodsEnum;
+use Edalicio\DependencyInjection\Core\Interfaces\IRequest;
 use Edalicio\DependencyInjection\Core\Request;
 use Edalicio\DependencyInjection\Core\Router;
 use Edalicio\DependencyInjection\Middlewares\AuthMiddleware;
@@ -33,10 +34,17 @@ $requestMethod =  $_SERVER['REQUEST_METHOD'];
 $requestUri =  parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 
-$router = new Router(requestMethod: $requestMethod, requestUri: $requestUri );
+$router = new Router(requestMethod: $requestMethod, requestUri: $requestUri , request: new Request());
 
 
-$router->prefix('/home')->register(HttpMethodsEnum::Get, '/:id', [ HomeController::class, 'show' ], [AuthMiddleware::class]);
+        $router->post('/', function(Request $request){
+            echo 'post';
+            dd($request->getParam('dsada'));
+        });
+    
+        $router->get('/', function(){
+            echo __METHOD__;
+        });
 
 
 $router->run($controllers);

@@ -13,14 +13,14 @@ use Edalicio\DependencyInjection\Core\Interfaces\IRouter;
 class Router
 {
 
+  use Traits\RouterTrait;
+
   private ?string $routerName = null;
-  private ?string $prefix = null;
+  public array $routes = [];
 
   public function __construct(
     private string $requestMethod,
-    private string $requestUri,
-    public array $routes = [],
-    private array $middlewares = [],
+    private string $requestUri,  
     private ?object $request = null,
   )
   {
@@ -67,6 +67,11 @@ class Router
     if( $this->prefix ){
       $url = $this->prefix.$url;
       $this->prefix = null;
+    }
+
+    if(!empty($this->middlewares) ){
+      $middlewares = [...$this->middlewares , ...$middlewares];
+      $this->middlewares = [];
     }
 
     $this->addRoute(
@@ -202,7 +207,7 @@ class Router
     $request = $this->request;
     return array_map(function (\ReflectionParameter $a) use ($request, $params) {
 
-      if (class_exists($request ?? '') && $a->getType() && get_class($request) == $a->getType()->getName()) {
+      if (!empty($request) && $a->getType() && get_class($request) == $a->getType()->getName()) {
         return $request;
       }
 
@@ -247,9 +252,5 @@ class Router
     }
   }
 
-  public function prefix(string $path):self
-  {
-      $this->prefix = $path;
-      return $this;
-  }
+  
 }

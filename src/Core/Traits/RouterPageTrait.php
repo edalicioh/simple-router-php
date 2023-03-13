@@ -8,11 +8,13 @@ trait RouterPageTrait
 {
     private array $files = [];
     private string $basePath;
+    private string $prefixPage;
 
 
-    public function pages($path)
+    public function pages(string $path, string $prefix = '/page')
     {
         $this->basePath = $path;
+        $this->prefixPage = $prefix;
 
 
         $this->getFiles($path);
@@ -20,7 +22,7 @@ trait RouterPageTrait
         
         foreach ($this->files as $key => $value) {
 
-            $uri =  "/page" . $value['page'];
+            $uri =  $this->prefixPage . $value['page'];
 
             $this->get($uri, function($args) use($value) {
                 extract($args, EXTR_SKIP);
@@ -28,9 +30,6 @@ trait RouterPageTrait
             });      
 
         }
-
-
-        // dd($this->routes);
     }
 
     private function getFiles($path)

@@ -22,12 +22,6 @@ function dd($v)
     die(var_dump($v));
 }
 
-$_SESSION['user'] = 1;
-
-$controllers = [
-    HomeController::class,
-    UserController::class,
-];
 
 $request =  new Request();
 
@@ -37,8 +31,9 @@ $requestUri =  $request->getPath();
 
 $router = new Router(requestMethod: $requestMethod, requestUri: $requestUri , request: $request);
 
+$router->pages(__DIR__."/pages");
 
-$router->run($controllers);
+$router->run();
 
 
 

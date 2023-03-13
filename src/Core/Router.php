@@ -8,12 +8,11 @@ use Edalicio\SimpleRouter\Core\Attribute\Route;
 use Edalicio\SimpleRouter\Core\Attribute\Middleware;
 use Edalicio\SimpleRouter\Core\Attribute\Controller;
 use Edalicio\SimpleRouter\Core\Enums\HttpMethodsEnum;
-use Edalicio\SimpleRouter\Core\Interfaces\IRouter;
 
 class Router
 {
 
-  use Traits\RouterTrait;
+  use Traits\RouterTrait, Traits\RouterPageTrait;
 
   private ?string $routerName = null;
   public array $routes = [];
@@ -228,18 +227,28 @@ class Router
         $params['data'] =  array_merge($_GET, $_POST, $array);
       }
 
+      if($a->getName() == 'args'){
+        $params = ['args' => $params];
+      }
 
 
       if (isset($params[$a->getName()])) {
         return $params[$a->getName()];
       }
 
+      
+
     }, $actionParameters);
   }
 
-  public function run(array $controllers)
+  public function run(?array $controllers = null)
   {
-    $this->setRoute($controllers);
+    if( $controllers) {
+
+      $this->setRoute($controllers);
+    }
+
+
     $route = $this->findRoute();
     if ($route) {
       [
@@ -256,6 +265,7 @@ class Router
       }
 
       $args = $this->setArgs(actionParameters: $actionParameters, params: $params);
+
 
       if(is_callable($action)) {
         return call_user_func_array($action, $args);

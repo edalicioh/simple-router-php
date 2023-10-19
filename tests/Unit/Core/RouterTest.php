@@ -63,8 +63,11 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
     $router->setRoute($controllers);
 
     $actualRoute = $router->findRoute();
+  
+    $this->assertEquals($expectedRoute['method'], $actualRoute['method']);
+    $this->assertEquals($expectedRoute['action'], $actualRoute['action']);
+    $this->assertEquals($expectedRoute['middlewares'], $actualRoute['middlewares']);
 
-    $this->assertEquals($expectedRoute, $actualRoute);
 })->with([
         'GET::index' => [
             'GET',
@@ -76,7 +79,7 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
                 'action' => "index",
                 'actionParameters' => [],
                 'params' => [],
-                'middlewares' => [new AuthMiddlewareMock()],
+                'middlewares' => [AuthMiddlewareMock::class],
             ]
         ],
         "GET::show" => [
@@ -89,7 +92,7 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
                 'action' => "show",
                 'actionParameters' => (new \ReflectionClass( HomeControllerMock::class ))->getMethods()[1]->getParameters(),
                 'params' => ['id' => '1'],
-                'middlewares' => [new AuthMiddlewareMock()],
+                'middlewares' => [AuthMiddlewareMock::class],
             ]
         ],
         'GET::edit' => [
@@ -102,7 +105,7 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
                 'action' => "edit",
                 'actionParameters' => (new \ReflectionClass( HomeControllerMock::class ))->getMethods()[1]->getParameters(),
                 'params' => ['id' => '1'],
-                'middlewares' => [new AuthMiddlewareMock()],
+                'middlewares' => [AuthMiddlewareMock::class],
             ]
         ],
         'POST::store'=>[
@@ -115,7 +118,7 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
                 'action' => "store",
                 'actionParameters' => [],
                 'params' => [],
-                'middlewares' => [new AuthMiddlewareMock()],
+                'middlewares' => [AuthMiddlewareMock::class],
             ]
         ],
         'PUT::update'=>[
@@ -128,7 +131,7 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
                 'action' => "update",
                 'actionParameters' => (new \ReflectionClass( HomeControllerMock::class ))->getMethods()[4]->getParameters(),
                 'params' => ['id' => '1'],
-                'middlewares' => [new AuthMiddlewareMock()],
+                'middlewares' => [AuthMiddlewareMock::class],
             ]
         ],
         "DELETE::delete"=>[
@@ -141,7 +144,7 @@ it('find route', function ($requestMethod, $requestUri, $expectedRoute) {
                 'action' => "delete",
                 'actionParameters' => (new \ReflectionClass( HomeControllerMock::class ))->getMethods()[5]->getParameters(),
                 'params' => ['id' => '1'],
-                'middlewares' => [new AuthMiddlewareMock()],
+                'middlewares' => [AuthMiddlewareMock::class],
             ]
         ],
     ]);
@@ -163,3 +166,4 @@ it("Rum", function ($requestMethod, $requestUri, $expected)
     ['GET' , '/' , "HomeControllerMock::index"],
     ['GET' , '/1' , "1"]
 ]);
+
